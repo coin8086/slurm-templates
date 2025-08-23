@@ -1,6 +1,8 @@
 param location string = resourceGroup().location
 param adminUserName string
 param adminUserSshPublicKey string
+param headNodeVmSize string = 'Standard_D2alds_v6'
+param computerNodeVmSize string = 'Standard_D2alds_v6'
 param computerNodeCount int
 
 var subnetId = vnet.properties.subnets[0].id
@@ -30,6 +32,7 @@ module headNode 'HeadNode.bicep' = {
   params: {
     location: location
     subnetId: subnetId
+    vmSize: headNodeVmSize
     adminUserName: adminUserName
     adminUserSshPublicKey: adminUserSshPublicKey
   }
@@ -41,6 +44,7 @@ module computeNodes 'ComputeNode.bicep' = [
     params: {
       location: location
       subnetId: subnetId
+      vmSize: computerNodeVmSize
       computerName: 'computenode-${i}'
       adminUserName: adminUserName
       adminUserSshPublicKey: adminUserSshPublicKey

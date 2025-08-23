@@ -1,5 +1,6 @@
 param location string = resourceGroup().location
 param subnetId string
+param vmSize string = 'Standard_D2alds_v6'
 param computerName string
 param adminUserName string
 param adminUserSshPublicKey string
@@ -26,7 +27,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
   location: location
   properties: {
     hardwareProfile: {
-      vmSize: 'Standard_D2alds_v6'
+      vmSize: vmSize
     }
     osProfile: {
       computerName: computerName
