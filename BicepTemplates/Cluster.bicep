@@ -4,6 +4,7 @@ param adminUserSshPublicKey string
 param headNodeVmSize string = 'Standard_D2alds_v6'
 param computerNodeVmSize string = 'Standard_D2alds_v6'
 param computerNodeCount int
+param computerNodeHasPublicIp bool = false
 
 var subnetId = vnet.properties.subnets[0].id
 
@@ -48,6 +49,7 @@ module computeNodes 'ComputeNode.bicep' = [
       computerName: 'computenode-${i}'
       adminUserName: adminUserName
       adminUserSshPublicKey: adminUserSshPublicKey
+      makePublicIp: computerNodeHasPublicIp
     }
   }
 ]

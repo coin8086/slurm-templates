@@ -4,6 +4,15 @@ param vmSize string = 'Standard_D2alds_v6'
 param computerName string
 param adminUserName string
 param adminUserSshPublicKey string
+param makePublicIp bool = false
+
+resource publicIp 'Microsoft.Network/publicIPAddresses@2024-07-01' = if (makePublicIp) {
+  name: '${computerName}-public-ip'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+}
 
 resource nic 'Microsoft.Network/networkInterfaces@2024-07-01' = {
   name: '${computerName}-nic'
@@ -16,6 +25,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2024-07-01' = {
           subnet: {
             id: subnetId
           }
+          publicIPAddress: makePublicIp ? {
+            id: publicIp.id
+          } : null
         }
       }
     ]
@@ -69,3 +81,5 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
     }
   }
 }
+
+output publicIp string = makePublicIp ? publicIp!.properties.ipAddress : ''
