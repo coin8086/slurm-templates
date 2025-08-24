@@ -2,9 +2,9 @@ param location string = resourceGroup().location
 param adminUserName string
 param adminUserSshPublicKey string
 param headNodeVmSize string = 'Standard_D2alds_v6'
-param computerNodeVmSize string = 'Standard_D2alds_v6'
-param computerNodeCount int
-param computerNodeHasPublicIp bool = false
+param computeNodeVmSize string = 'Standard_D2alds_v6'
+param computeNodeCount int
+param computeNodeHasPublicIp bool = false
 
 var subnetId = vnet.properties.subnets[0].id
 
@@ -40,16 +40,16 @@ module headNode 'HeadNode.bicep' = {
 }
 
 module computeNodes 'ComputeNode.bicep' = [
-  for i in range(1, computerNodeCount): {
+  for i in range(1, computeNodeCount): {
     name: 'computeNodeDeployment${i}'
     params: {
       location: location
       subnetId: subnetId
-      vmSize: computerNodeVmSize
+      vmSize: computeNodeVmSize
       computerName: 'computenode-${i}'
       adminUserName: adminUserName
       adminUserSshPublicKey: adminUserSshPublicKey
-      makePublicIp: computerNodeHasPublicIp
+      makePublicIp: computeNodeHasPublicIp
     }
   }
 ]
