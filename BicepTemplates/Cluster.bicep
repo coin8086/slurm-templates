@@ -2,7 +2,9 @@ param location string = resourceGroup().location
 param adminUserName string
 param adminUserSshPublicKey string
 param headNodeVmSize string = 'Standard_D2alds_v6'
+param headNodeName string = 'headnode'
 param computeNodeVmSize string = 'Standard_D2alds_v6'
+param computeNodeNamePrefix string = 'computenode-'
 param computeNodeCount int
 param computeNodeHasPublicIp bool = false
 
@@ -34,6 +36,7 @@ module headNode 'HeadNode.bicep' = {
     location: location
     subnetId: subnetId
     vmSize: headNodeVmSize
+    computerName: headNodeName
     adminUserName: adminUserName
     adminUserSshPublicKey: adminUserSshPublicKey
   }
@@ -46,7 +49,7 @@ module computeNodes 'ComputeNode.bicep' = [
       location: location
       subnetId: subnetId
       vmSize: computeNodeVmSize
-      computerName: 'computenode-${i}'
+      computerName: '${computeNodeNamePrefix}${i}'
       adminUserName: adminUserName
       adminUserSshPublicKey: adminUserSshPublicKey
       makePublicIp: computeNodeHasPublicIp

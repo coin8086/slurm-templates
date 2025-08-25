@@ -1,10 +1,9 @@
 param location string = resourceGroup().location
 param subnetId string
 param vmSize string = 'Standard_D2alds_v6'
+param computerName string = 'headnode'
 param adminUserName string
 param adminUserSshPublicKey string
-
-var computerName = 'headnode'
 
 resource publicIp 'Microsoft.Network/publicIPAddresses@2024-07-01' = {
   name: '${computerName}-public-ip'
