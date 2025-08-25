@@ -5,7 +5,7 @@
 # Parameters
 # admin_user* The admin user on head node and compute nodes
 # admin_user_ssh_private_key_file The SSH private key file path for the admin user
-# slurm_user_passwd The database password for the slurm system user
+# slurm_user_db_passwd The database password for the slurm system user
 # head_node The hostname of the head node
 # compute_node_name_prefix The prefix for compute node hostnames. A compute node hostname is like "{prefix}{index}".
 # compute_node_count* The number of compute nodes
@@ -24,7 +24,7 @@ config_dir="$(dirname "$src_dir")/ConfigFiles"
 
 admin_user=${admin_user:?'Environment variable "admin_user" must be set.'}
 admin_user_ssh_private_key_file=${admin_user_ssh_private_key_file:-"$HOME/.ssh/id_rsa"}
-slurm_user_passwd=${slurm_user_passwd:?'Environment variable "slurm_user_passwd" must be set.'}
+slurm_user_db_passwd=${slurm_user_db_passwd:?'Environment variable "slurm_user_db_passwd" must be set.'}
 head_node=${head_node:-'headnode'}
 compute_node_name_prefix=${compute_node_name_prefix:-'computenode-'}
 compute_node_count=${compute_node_count:?'Environment variable "compute_node_count" must be set.'}
@@ -53,7 +53,7 @@ private_key_file_name=$(basename "$admin_user_ssh_private_key_file")
 
 echo "### Executing setup script on head node"
 ssh "$admin_user@$head_node" <<EOF
-export slurm_user_passwd=$slurm_user_passwd
+export slurm_user_db_passwd=$slurm_user_db_passwd
 export compute_node_name_prefix=$compute_node_name_prefix
 export compute_node_count=$compute_node_count
 export compute_node_cpus=$compute_node_cpus
