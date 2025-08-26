@@ -12,6 +12,7 @@ set -e
 cluster_name=${cluster_name:-'slurm-cluster-1'}
 head_node_name=$(hostname)
 
+# TODO: Can compute_node_count be 0?
 compute_node_count=${compute_node_count:?'Environment variable "compute_node_count" must be set.'}
 (( compute_node_count < 1)) && { echo "Invalid compute_node_count"; exit 1; }
 
