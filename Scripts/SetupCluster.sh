@@ -71,6 +71,11 @@ sudo chown $admin_user:$admin_user ~/slurm.conf
 sudo chmod 644 ~/slurm.conf
 EOF
 
+if (( $compute_node_count <= 0 )); then
+  echo "## No compute node to setup"
+  exit 0
+fi
+
 echo "## Setup $compute_node_count compute node(s)"
 
 echo "### Downloading configuration files from head node"
