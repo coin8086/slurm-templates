@@ -16,6 +16,21 @@ shopt -s expand_aliases
 : ${compute_node_count:?'Environment variable "compute_node_count" must be set.'}
 : ${compute_node_cpus:?'Environment variable "compute_node_cpus" must be set.'}
 
+# NOTE
+# The container is in a different subnet from the one of the head and compute nodes. According to the following Azure documents
+# https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-script-template?tabs=CLI#access-private-virtual-network
+# https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances?tabs=redhat#azure-provided-name-resolution
+# the container should be able to resolve the node names. However, there seems an issue in Azure about the name resolution.
+# So here /etc/resolv.conf is modified to resolve the issue.
+
+echo "## Configure /etc/resolv.conf"
+
+if ! grep -q '^search .*\<internal.cloudapp.net\>' /etc/resolv.conf; then
+  # NOTE: "sed -i" causes error in the container environment.
+  conf=$(sed 's/^search /search internal.cloudapp.net /' /etc/resolv.conf)
+  echo "$conf" > /etc/resolv.conf
+fi
+
 echo "## Install required tools"
 
 tdnf install wget tar openssh pssh -y
@@ -44,4 +59,6 @@ wget -qO- "$package_url" | tar xz --strip 1 -C "$package_dir"
 chmod -R +x "$package_dir/Scripts/"
 
 echo "## Start setup"
+# NOTE: The script is sourced, otherwise the aliases set previously will not be available in the script.
+# Also note that "shopt -s expand_aliases" must be set to make aliases available in the current script.
 . "$package_dir/Scripts/SetupCluster.sh"
