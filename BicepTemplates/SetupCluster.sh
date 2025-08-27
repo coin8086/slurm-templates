@@ -54,7 +54,7 @@ if [[ -e $package_dir ]]; then
 fi
 mkdir -p "$package_dir"
 
-package_url=https://github.com/coin8086/slurm-templates/archive/refs/tags/v1.0.0-beta2.tar.gz
+package_url=https://github.com/coin8086/slurm-templates/archive/refs/tags/v1.0.0-beta3.tar.gz
 wget -qO- "$package_url" | tar xz --strip 1 -C "$package_dir"
 chmod -R +x "$package_dir/Scripts/"
 
